@@ -42,6 +42,7 @@ docker-compose up -d
 ## ⚙️ Structure des fichiers
 
 .
+
 ├─ app.py # API Flask
 
 ├─ Dockerfile # Build de l’API

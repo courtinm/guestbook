@@ -1,0 +1,50 @@
+<!-- <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon App Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Bonjour sur la page du Gold Book !</h1>
+    <p>Mon application fonctionne ! </p>
+    <p>La page a été vue {{count}} fois.</p>
+</body>
+</html> -->
+
+
+<!doctype html>
+<html>
+<head>
+  <title>Guestbook</title>
+</head>
+<body>
+
+<h1>Livre d’or</h1>
+<p>Page vue {{ count }} fois</p>
+
+<form method="POST" action="/">
+  <label>Auteur</label><br>
+  <input type="text" name="author" required><br><br>
+
+  <label>Message</label><br>
+  <textarea name="content" required></textarea><br><br>
+
+  <button type="submit">Envoyer</button>
+</form>
+
+<hr>
+
+<h2>Messages</h2>
+<ul>
+{% for msg in messages %}
+  <li>
+    <strong>{{ msg.author }}</strong> :
+    {{ msg.content }}
+    <em>({{ msg.created_at }})</em>
+  </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

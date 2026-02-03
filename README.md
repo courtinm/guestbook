@@ -1,4 +1,4 @@
-The Over-Engineered Guestbook
+##The Over-Engineered Guestbook
 
 App utilisateur : http://localhost
 
@@ -10,7 +10,7 @@ Base : guestbook
 
 Utilisateur / Mot de passe : ceux de .env
 
-📝 Fonctionnalités
+##📝 Fonctionnalités
 
 Affichage du nombre de visites via Redis.
 
@@ -22,7 +22,7 @@ Persistance des données grâce aux volumes Docker.
 
 Reverse proxy Nginx pour sécuriser l’accès au backend.
 
-🔒 Sécurité
+##🔒 Sécurité
 
 Aucun mot de passe en clair dans le dépôt.
 
@@ -36,7 +36,7 @@ Volumes pour la persistance des données.
 
 Flask en mode debug désactivé en prod.
 
-⚙️ Structure des fichiers
+##⚙️ Structure des fichiers
 .
 ├─ app.py                 # API Flask
 ├─ Dockerfile             # Build de l’API
@@ -56,7 +56,7 @@ Multi-stage build pour l’image Flask (taille optimisée).
 
 Isolation réseau : l’utilisateur n’accède qu’à Nginx, Nginx ne parle pas directement à la base.
 
-📌 Bonnes pratiques
+##📌 Bonnes pratiques
 
 Ne pas exposer Adminer en prod.
 
@@ -66,7 +66,7 @@ HTTPS recommandé pour déploiement réel.
 
 Vérifier les logs et limiter le trafic si nécessaire.
 
-🔑 Commandes utiles
+##🔑 Commandes utiles
 # Voir les logs
 docker-compose logs -f
 

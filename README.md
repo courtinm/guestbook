@@ -1,72 +1,69 @@
-##The Over-Engineered Guestbook
+# 🖊️ The Over-Engineered Guestbook
 
-App utilisateur : http://localhost
+Un projet de **guestbook** moderne et sécurisé, utilisant Docker, Flask, PostgreSQL, Redis et Nginx.  
+Cette application a été créée comme excuse pour manipuler docker. Elle permet de poster des messages et de les visualiser, comme sur un livre d'or.
 
-Adminer (dev only) : http://localhost:8080
+- Cloner et lancer le projet en une seule commande (après avoir modifier le fichier .env.place_holder en .env avec les variables de votre choix) :
+docker-compose up -d
 
-Serveur : db
+---
 
-Base : guestbook
+## 🌐 Accès
 
-Utilisateur / Mot de passe : ceux de .env
+- **App utilisateur** : [http://localhost](http://localhost)  
+- **Adminer (dev only)** : [http://localhost:8080](http://localhost:8080)  
+- **Serveur de base de données** : `db`  
+- **Base de données** : `guestbook`  
+- **Utilisateur / Mot de passe** : définis dans le fichier `.env`
 
-##📝 Fonctionnalités
+---
 
-Affichage du nombre de visites via Redis.
+## 📝 Fonctionnalités
 
-Lecture / écriture de messages dans PostgreSQL via l’API Flask.
+- Affichage du nombre de visites via **Redis**.  
+- Lecture et écriture de messages dans **PostgreSQL** via l’**API Flask**.  
+- Interface web simple pour afficher les messages.  
+- **Persistance** des données grâce aux volumes Docker.  
+- **Reverse proxy Nginx** pour sécuriser l’accès au backend.  
 
-Interface web simple pour afficher les messages.
+---
 
-Persistance des données grâce aux volumes Docker.
+## 🔒 Sécurité
 
-Reverse proxy Nginx pour sécuriser l’accès au backend.
+- Aucun mot de passe en clair dans le dépôt.  
+- **Redis** et **PostgreSQL** non exposés à l’extérieur.  
+- **Nginx** est le seul point d’accès externe.  
+- **Adminer** accessible uniquement en local pour debug.  
+- Volumes Docker pour la persistance des données.  
+- **Flask** en mode debug désactivé en production.  
 
-##🔒 Sécurité
+---
 
-Aucun mot de passe en clair dans le dépôt.
+## ⚙️ Structure des fichiers
 
-Redis et PostgreSQL non exposés à l’extérieur.
-
-Nginx est le seul point d’accès externe.
-
-Adminer accessible uniquement en local pour debug.
-
-Volumes pour la persistance des données.
-
-Flask en mode debug désactivé en prod.
-
-##⚙️ Structure des fichiers
 .
-├─ app.py                 # API Flask
-├─ Dockerfile             # Build de l’API
-├─ docker-compose.yml     # Orchestration de tous les services
-├─ nginx.conf             # Configuration du reverse proxy
-├─ init.sql               # SQL initial pour la base Postgres
-├─ templates/             # HTML du front
-├─ static/                # CSS / JS
-├─ .env.example           # Variables d’environnement fictives
+├─ app.py # API Flask
+├─ Dockerfile # Build de l’API
+├─ docker-compose.yml # Orchestration de tous les services
+├─ nginx.conf # Configuration du reverse proxy
+├─ init.sql # SQL initial pour PostgreSQL
+├─ templates/ # HTML du front
+├─ .env.example # Variables d’environnement fictives à modifier
 └─ README.md
 
-Le projet peut être cloné et lancé en une seule commande : docker-compose up -d --build.
+---
 
-La persistance est assurée via un volume Docker nommé.
+## 📌 Bonnes pratiques
 
-Multi-stage build pour l’image Flask (taille optimisée).
+Ne pas exposer Adminer en production.
 
-Isolation réseau : l’utilisateur n’accède qu’à Nginx, Nginx ne parle pas directement à la base.
+Toujours utiliser .env pour gérer les secrets.
 
-##📌 Bonnes pratiques
+HTTPS recommandé pour tout déploiement réel.
 
-Ne pas exposer Adminer en prod.
+Vérifier régulièrement les logs et limiter le trafic si nécessaire.
 
-Toujours utiliser .env pour secrets.
-
-HTTPS recommandé pour déploiement réel.
-
-Vérifier les logs et limiter le trafic si nécessaire.
-
-##🔑 Commandes utiles
+## 🔑 Commandes utiles
 # Voir les logs
 docker-compose logs -f
 
@@ -79,5 +76,6 @@ docker-compose down -v
 # Lister les conteneurs
 docker ps
 
-# Se connecter à Postgres
+# Se connecter à PostgreSQL
 docker exec -it projetgold_book_db_1 psql -U marie -d guestbook
+

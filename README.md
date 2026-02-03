@@ -43,12 +43,19 @@ docker-compose up -d
 
 .
 ├─ app.py # API Flask
+
 ├─ Dockerfile # Build de l’API
+
 ├─ docker-compose.yml # Orchestration de tous les services
+
 ├─ nginx.conf # Configuration du reverse proxy
+
 ├─ init.sql # SQL initial pour PostgreSQL
+
 ├─ templates/ # HTML du front
+
 ├─ .env.example # Variables d’environnement fictives à modifier
+
 └─ README.md
 
 ---

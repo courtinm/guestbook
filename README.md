@@ -67,8 +67,6 @@ Ne pas exposer Adminer en production.
 
 Toujours utiliser .env pour gérer les secrets.
 
-HTTPS recommandé pour tout déploiement réel.
-
 Vérifier régulièrement les logs et limiter le trafic si nécessaire.
 
 ## 🔑 Commandes utiles

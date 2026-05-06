@@ -1,0 +1,29 @@
+name: Docker Image CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # - name: Get version
+    #   id: version
+    #   run: echo "VERSION=$(cat VERSION.txt)" >> $GITHUB_OUTPUT
+
+
+    - name: Deploy image to the GCP VM instance and restart the app
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.GOLDBOOK_VM_EXTERNAL_IP }}
+        username: ${{ secrets.GOLDBOOK_VM_USER }}
+        key: ${{ secrets.GOLDBOOK_VM_SSH_KEY_PRIVATE }}
+        script: |
+          cd guestbook
+          docker compose pull
+          docker compose up -d

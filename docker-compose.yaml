@@ -46,7 +46,7 @@ services:
       - data
 
   app_goldbook:
-    image: app_book
+    image: ${USERNAME_DOCKERHUB}/app_book
     container_name: flask-api
     build: .
     # ports: 

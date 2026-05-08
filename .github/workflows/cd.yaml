@@ -27,5 +27,6 @@ jobs:
         key: ${{ secrets.GOLDBOOK_VM_SSH_KEY_PRIVATE }}
         script: |
           cd guestbook
+          git pull
           docker compose pull
           docker compose up -d

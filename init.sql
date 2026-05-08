@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 
 INSERT INTO messages (author, content)
-SELECT 'alice', '1er message'
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE author='alice');
+SELECT 'alice', 'Hello from Alice!'
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE author = 'alice');
 
 INSERT INTO messages (author, content)
-SELECT 'bob', '2eme message'
-WHERE NOT EXISTS (SELECT 1 FROM messages WHERE author='bob');
+SELECT 'bob', 'Hey everyone, great app!'
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE author = 'bob');

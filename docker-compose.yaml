@@ -7,7 +7,8 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - app_goldbook
+      app_goldbook:
+        condition: service_healthy
     networks:
       - back_end
       - front_end
@@ -15,6 +16,11 @@ services:
   redis:
     image: redis:alpine3.22
     container_name: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - data
 
@@ -23,7 +29,7 @@ services:
     restart: always
     shm_size: 128mb
     env_file:
-      - .env.place_holder
+      - .env.example
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -32,6 +38,12 @@ services:
     volumes:
       - vol_pg:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     networks:
       - data
 
@@ -41,7 +53,8 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - data
 
@@ -49,10 +62,8 @@ services:
     image: ${USERNAME_DOCKERHUB}/app_book
     container_name: flask-api
     build: .
-    # ports: 
-    #   - 8000:8000
     env_file:
-      - .env.place_holder
+      - .env.example
     environment:
       REDIS_HOST: redis
       POSTGRES_HOST: db
@@ -60,8 +71,16 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
     depends_on:
-      - redis
-      - db
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     networks:
       - back_end
       - data

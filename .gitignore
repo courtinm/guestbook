@@ -1,3 +1,6 @@
 .env
 pat_docker_hub.txt
-projet3_cloud_distribue.pdf
+description projet/
+__pycache__/
+*.pyc
+.pytest_cache/

@@ -26,6 +26,11 @@ def get_db_connection():
     )
 
 
+@app.route("/ping")
+def ping():
+    return jsonify({"status": "ok"}), 200
+
+
 @app.route("/health")
 def health():
     try:

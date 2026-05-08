@@ -12,4 +12,4 @@ EXPOSE 8000
 RUN adduser -D app_user
 USER app_user
 
-CMD ["python", "app.py"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "2", "app:app"]

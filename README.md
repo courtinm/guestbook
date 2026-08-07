@@ -59,6 +59,37 @@ Services start in dependency order via Docker Compose health checks: PostgreSQL 
 
 ---
 
+## CI/CD pipeline
+
+Every push to `main` runs a two-stage GitHub Actions pipeline — no manual build or deploy step:
+
+1. **CI** (`.github/workflows/ci.yaml`) builds the Flask image, tags it with the version in `VERSION.txt` and with `latest`, then pushes both tags to Docker Hub.
+2. **CD** (`.github/workflows/cd.yaml`) runs automatically once CI succeeds (or on demand via `workflow_dispatch`). It SSHes into the GCP VM, pulls the latest source and image, and restarts the stack with `docker compose up -d`.
+
+```
+main push
+   │
+   ▼
+CI   build → tag (VERSION.txt + latest) → push to Docker Hub
+   │
+   ▼  (on success, or manual dispatch)
+CD   ssh → git pull → docker compose pull → docker compose up -d
+```
+
+---
+
+## Design decisions
+
+Short answers to "why", for anyone asking in review:
+
+- **Three Docker networks instead of one.** `front_end`, `back_end`, and `data` isolate blast radius — Postgres and Redis are reachable only from Flask/Adminer, never from Nginx or the host. A single default bridge network would work identically in the happy path, but wouldn't stop a compromised Nginx container from talking to the database directly.
+- **Healthchecks + `depends_on: condition: service_healthy` instead of `restart: always` alone.** `restart: always` only recovers a container after it's already crashed; it does nothing to stop Flask from starting before Postgres can accept connections. Ordering by healthcheck avoids that startup race.
+- **Redis has no persistent volume.** The visit counter is disposable cache, not source of truth — Postgres is. Losing it on a container recreate is an acceptable trade-off for not managing another volume; if the counter needed to survive restarts, it would live in Postgres instead.
+- **Versioning via `VERSION.txt` rather than a commit SHA.** A human-readable version (`1.0.1`) is easier to reason about and maps directly to the Docker Hub tag — at the cost of remembering to bump it before a release. Known limitation: the VM's `docker-compose.yaml` pulls `latest`, not a pinned version, so rollback today means re-tagging on Docker Hub rather than editing one line in Compose — the next thing worth fixing.
+- **Adminer bound to `127.0.0.1` only.** It's a debugging convenience, not a feature meant to be internet-facing — loopback-only binding keeps it unreachable even if port 8080 were opened on the firewall by mistake.
+
+---
+
 ## Security
 
 - No credentials in the repository — secrets via `.env` only
@@ -83,6 +114,7 @@ Services start in dependency order via Docker Compose health checks: PostgreSQL 
 ├── requirements-dev.txt    # Dev/test dependencies
 ├── templates/              # Jinja2 HTML templates
 ├── tests/                  # Pytest test suite
+├── .github/workflows/      # CI (build+push) and CD (deploy) pipelines
 ├── .env.example            # Environment variable template
 └── README.md
 ```
